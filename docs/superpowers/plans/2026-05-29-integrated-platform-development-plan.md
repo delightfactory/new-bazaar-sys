@@ -16,24 +16,50 @@ The approved product design is too broad for one safe implementation plan. Devel
 
 No feature implementation may start until these items exist:
 
+- A planning governance pack.
+- A traceability matrix from design requirements to implementation plans and tests.
+- A risk register with owners, mitigations, and review cadence.
+- An architecture decision record log.
 - A technical stack decision record.
 - A domain map and dependency graph.
 - A database foundation plan.
 - A permission and entitlement matrix.
+- A data classification and privacy map.
+- A money, time, and localization convention record.
+- An external integration adapter policy.
 - A test strategy document.
 - A rollout and verification checklist.
+
+## Governance Operating Principle
+
+Governance is a development accelerator, not a ceremony layer. Every required artifact must be compact, actionable, and tied to a real platform risk.
+
+A governance control may block development only when it protects at least one of these areas:
+
+- Tenant isolation.
+- Permissions and entitlements.
+- Money, payments, refunds, or ledger effects.
+- Inventory correctness.
+- Offline sync correctness.
+- Public marketplace visibility and moderation.
+- Customer or seller privacy.
+- Irreversible architecture or provider decisions.
+- Production reliability.
+
+Governance controls must not block development for cosmetic preference, speculative scale, or documentation ceremony. When a safe default exists, use it and record the decision.
 
 ## Required Plan Documents
 
 Create these implementation plans in this order:
 
-1. `docs/superpowers/plans/2026-05-29-phase-0-technical-foundation-plan.md`
-2. `docs/superpowers/plans/2026-05-29-phase-1-identity-tenancy-entitlements-plan.md`
-3. `docs/superpowers/plans/2026-05-29-phase-2-seller-commerce-pos-plan.md`
-4. `docs/superpowers/plans/2026-05-29-phase-3-organizer-bazaar-hub-plan.md`
-5. `docs/superpowers/plans/2026-05-29-phase-4-public-marketplace-plan.md`
-6. `docs/superpowers/plans/2026-05-29-phase-5-promotions-growth-plan.md`
-7. `docs/superpowers/plans/2026-05-29-production-readiness-plan.md`
+1. `docs/superpowers/plans/2026-06-04-planning-governance-plan.md`
+2. `docs/superpowers/plans/2026-05-29-phase-0-technical-foundation-plan.md`
+3. `docs/superpowers/plans/2026-05-29-phase-1-identity-tenancy-entitlements-plan.md`
+4. `docs/superpowers/plans/2026-05-29-phase-2-seller-commerce-pos-plan.md`
+5. `docs/superpowers/plans/2026-05-29-phase-3-organizer-bazaar-hub-plan.md`
+6. `docs/superpowers/plans/2026-05-29-phase-4-public-marketplace-plan.md`
+7. `docs/superpowers/plans/2026-05-29-phase-5-promotions-growth-plan.md`
+8. `docs/superpowers/plans/2026-05-29-production-readiness-plan.md`
 
 Each plan must include:
 
@@ -61,24 +87,31 @@ All subsystem plans must follow these contracts:
 - Every important side effect emits a persisted domain event through an outbox.
 - Every public form and coupon redemption path has rate limiting and abuse controls.
 - Every admin action that changes access, money, public visibility, or stock is audited.
+- Every money amount is stored as integer minor units with explicit currency code.
+- Every business instant is stored in UTC; local business dates and event time zones are stored where business meaning depends on local time.
+- Every external provider integration is hidden behind an internal adapter contract.
+- Every uploaded asset has owner, visibility, size/type validation, and safe public-serving rules.
+- Every public slug has uniqueness, reservation, and collision handling rules.
+- Every import/export path enforces workspace ownership, permissions, validation, and auditability.
 
 ## Domain Dependency Order
 
 Build domains in this dependency order:
 
-1. Platform foundation: repository, stack, quality tooling, environment configuration.
-2. Identity and tenancy: users, workspaces, memberships, roles, permissions.
-3. Entitlements and plans: plans, subscriptions, entitlements, coupons, partner allocations.
-4. Platform admin basics: admin roles, audit log browsing, manual moderation queues.
-5. Seller commerce core: products, variants, locations, inventory movements.
-6. Financial core: payment accounts, payments, payment allocations, ledger entries.
-7. Orders and POS: sales, orders, returns, refunds, POS shifts.
-8. Offline sync: device registration, local sale sync, idempotency, conflict states.
-9. Organizer and Bazaar Hub: organizers, events, applications, exhibitors.
-10. Marketplace publishing: public profiles, listings, review, public pages.
-11. Marketplace order/request flow: public buyer, cart/request, order handoff to sellers.
-12. Promotions: campaigns, placements, featured listings, reporting.
-13. Production readiness: observability, backups, restore, rate limiting, security review.
+1. Planning governance: traceability, risk register, ADR log, domain dependency map, conventions, and release gates.
+2. Platform foundation: repository, stack, quality tooling, environment configuration.
+3. Identity and tenancy: users, workspaces, memberships, roles, permissions.
+4. Entitlements and plans: plans, subscriptions, entitlements, coupons, partner allocations.
+5. Platform admin basics: admin roles, audit log browsing, manual moderation queues.
+6. Seller commerce core: products, variants, locations, inventory movements.
+7. Financial core: payment accounts, payments, payment allocations, ledger entries.
+8. Orders and POS: sales, orders, returns, refunds, POS shifts.
+9. Offline sync: device registration, local sale sync, idempotency, conflict states.
+10. Organizer and Bazaar Hub: organizers, events, applications, exhibitors.
+11. Marketplace publishing: public profiles, listings, review, public pages.
+12. Marketplace order/request flow: public buyer, cart/request, order handoff to sellers.
+13. Promotions: campaigns, placements, featured listings, reporting.
+14. Production readiness: observability, backups, restore, rate limiting, security review.
 
 ## Cross-Cutting Quality Gates
 
@@ -92,8 +125,92 @@ Every phase must pass these gates before the next phase begins:
 - Audit logs exist for privileged mutations introduced in the phase.
 - Domain events are persisted for critical side effects introduced in the phase.
 - Error states are visible in UI for the phase's primary workflows.
+- RTL and mobile layouts are verified for every new user-facing workflow.
+- Public and seller-facing pages meet the phase's accessibility baseline.
+- Money, date, and time displays follow the approved conventions.
+- New external integrations use adapter boundaries and have failure-mode tests.
+- New media upload or public content flows enforce file validation and visibility rules.
+- New public routes have SEO, slug, and privacy checks where relevant.
 - The phase has a small seed dataset for manual verification.
 - The phase is committed separately with a clear message.
+
+## Task 0: Create Planning Governance Plan
+
+**Files:**
+- Create: `docs/superpowers/plans/2026-06-04-planning-governance-plan.md`
+- Reference: `docs/superpowers/specs/2026-05-29-bazaar-commerce-network-design.md`
+- Reference: `docs/superpowers/audits/2026-06-04-plan-double-review.md`
+
+- [ ] **Step 1: Write the planning governance plan**
+
+Create `docs/superpowers/plans/2026-06-04-planning-governance-plan.md` with this exact header:
+
+```markdown
+# Planning Governance Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Establish traceability, risk management, architectural decision control, and cross-domain conventions before technical implementation begins.
+
+**Architecture:** This plan creates the governance artifacts that every later implementation plan must reference. It prevents independent subsystem plans from drifting away from the approved product vision and integration contracts.
+
+**Tech Stack:** Markdown governance artifacts in `docs/superpowers`, using requirement identifiers, ADR identifiers, risk identifiers, and checklist-driven verification.
+
+---
+```
+
+The plan must create:
+
+- `docs/superpowers/governance/requirements-traceability-matrix.md`
+- `docs/superpowers/governance/risk-register.md`
+- `docs/superpowers/governance/adr-log.md`
+- `docs/superpowers/governance/domain-dependency-map.md`
+- `docs/superpowers/governance/permission-entitlement-matrix.md`
+- `docs/superpowers/governance/data-classification-privacy-map.md`
+- `docs/superpowers/governance/money-time-localization-conventions.md`
+- `docs/superpowers/governance/external-integration-adapter-policy.md`
+- `docs/superpowers/governance/media-asset-policy.md`
+- `docs/superpowers/governance/release-gates.md`
+
+Each governance artifact should start as a concise working document. Expand it only when a later implementation plan needs more precision.
+
+The plan must require these checks:
+
+- Every requirement in the product design has an identifier.
+- Every requirement maps to at least one phase plan or an explicitly deferred commercial decision.
+- Every critical risk has mitigation and owner.
+- Every high-impact architecture decision has an ADR entry.
+- Every role/permission/entitlement combination is explicitly allowed or denied.
+- Every PII field has owner, visibility, retention, and export rules.
+- Money is represented as integer minor units with currency code.
+- Time is stored as UTC instants plus local business date/time zone fields where needed.
+- External integrations depend on internal adapter contracts.
+- Media assets have ownership, validation, public visibility, and moderation rules.
+
+- [ ] **Step 2: Verify the plan exists**
+
+Run:
+
+```powershell
+Test-Path docs/superpowers/plans/2026-06-04-planning-governance-plan.md
+```
+
+Expected output:
+
+```text
+True
+```
+
+- [ ] **Step 3: Commit the planning governance plan**
+
+Run:
+
+```powershell
+git add docs/superpowers/plans/2026-06-04-planning-governance-plan.md
+git commit -m "docs: add planning governance plan"
+```
+
+Expected result: one commit containing only the planning governance plan.
 
 ## Task 1: Create Technical Foundation Decision Plan
 
@@ -125,11 +242,20 @@ Add sections for:
 - Repository folder structure.
 - Domain boundary rules.
 - Environment variable rules.
+- ADR creation process.
+- Traceability matrix update process.
+- Risk register update process.
+- Money/time/localization convention enforcement.
+- External adapter folder and contract pattern.
+- Media/asset handling foundation.
 - Test tooling.
 - Formatting and linting.
 - Database migration workflow.
 - Local development command.
 - CI command set.
+- Health check and environment validation.
+- Structured logging baseline.
+- Seed/reset workflow.
 - Acceptance criteria.
 
 - [ ] **Step 2: Verify the plan exists**
@@ -520,6 +646,7 @@ Expected result: one commit containing only the production readiness plan.
 Run:
 
 ```powershell
+Test-Path docs/superpowers/plans/2026-06-04-planning-governance-plan.md
 Test-Path docs/superpowers/plans/2026-05-29-phase-0-technical-foundation-plan.md
 Test-Path docs/superpowers/plans/2026-05-29-phase-1-identity-tenancy-entitlements-plan.md
 Test-Path docs/superpowers/plans/2026-05-29-phase-2-seller-commerce-pos-plan.md
@@ -532,6 +659,7 @@ Test-Path docs/superpowers/plans/2026-05-29-production-readiness-plan.md
 Expected output:
 
 ```text
+True
 True
 True
 True
