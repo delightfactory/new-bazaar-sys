@@ -6,15 +6,21 @@
 
 **Architecture:** The product will be implemented as a modular platform with clear domain boundaries, shared identity/tenancy foundations, entitlement-controlled access, event-driven side effects, and offline-first POS sync. Because the approved design spans multiple independent subsystems, this master plan governs execution order and quality gates, while each subsystem receives its own focused implementation plan before code is written.
 
-**Tech Stack:** TypeScript-first web platform; Next.js App Router candidate for the web app; PostgreSQL as the relational source of truth; ORM/migration tool to be selected in the technical stack plan; PWA offline storage for POS; automated tests covering tenant isolation, permissions, entitlements, lifecycle transitions, inventory/ledger invariants, and sync idempotency.
+**Tech Stack:** Node.js 24 LTS, pnpm, TypeScript, React, React Router Framework Mode powered by Vite, Supabase Postgres/Auth/Storage/Realtime/Queues/Cron, SQL-first migrations, IndexedDB/Dexie for offline POS, Vitest, Testing Library, Playwright, and SQL/RLS tests.
 
 ---
 
 ## Planning Rule
 
-The approved product design is too broad for one safe implementation plan. Development must be split into focused plans that each produce working, testable software without breaking platform integration.
+The approved product design is too broad for one safe implementation plan. Development is split into focused plans that each produce working, testable software without breaking platform integration.
 
-No feature implementation may start until these items exist:
+Planning uses a rolling-wave model:
+
+- Governance and Phase 0 plans must exist before platform scaffolding.
+- The detailed plan for a business phase must exist and pass review before that phase starts.
+- Later phase plans do not block earlier implementation when their domain contracts and dependencies are already fixed.
+
+Platform scaffolding may not start until these items exist:
 
 - A planning governance pack.
 - A traceability matrix from design requirements to implementation plans and tests.
@@ -50,7 +56,7 @@ Governance controls must not block development for cosmetic preference, speculat
 
 ## Required Plan Documents
 
-Create these implementation plans in this order:
+Create detailed implementation plans in this order, immediately before their phase is executed:
 
 1. `docs/superpowers/plans/2026-06-04-planning-governance-plan.md`
 2. `docs/superpowers/plans/2026-05-29-phase-0-technical-foundation-plan.md`
@@ -72,6 +78,8 @@ Each plan must include:
 - Seed data or fixtures.
 - Verification steps.
 - Commit boundaries.
+
+The governance pack, Phase 0 plan, and Phase 1 plan form the initial development baseline. Phase 2 onward remains governed by the approved design, dependency map, traceability matrix, and release gates until each detailed plan is written.
 
 ## Integration Contract
 
@@ -229,9 +237,9 @@ Create `docs/superpowers/plans/2026-05-29-phase-0-technical-foundation-plan.md` 
 
 **Goal:** Establish the project stack, repository structure, quality tooling, environment model, and architectural boundaries before feature implementation begins.
 
-**Architecture:** Build a TypeScript-first modular web platform with a relational database, domain-oriented folder structure, shared testing utilities, and explicit configuration boundaries. This phase creates no business workflow beyond health checks and developer foundations.
+**Architecture:** Build a TypeScript-first modular web platform using React Router Framework Mode on Vite, Supabase, a domain-oriented folder structure, shared testing utilities, and explicit configuration boundaries. This phase creates no business workflow beyond health checks and developer foundations.
 
-**Tech Stack:** TypeScript, Next.js App Router candidate, PostgreSQL, ORM/migrations selected in this plan, Playwright for browser verification, unit/integration test runner selected in this plan, PWA support planned for POS phases.
+**Tech Stack:** Node.js 24 LTS, pnpm, TypeScript, React Router Framework Mode, Vite, Supabase, SQL-first migrations, Vitest, Testing Library, Playwright, and PWA support planned for POS phases.
 
 ---
 ```
@@ -639,9 +647,9 @@ git commit -m "docs: add production readiness plan"
 
 Expected result: one commit containing only the production readiness plan.
 
-## Final Verification for Planning Phase
+## Initial Planning Baseline Verification
 
-- [ ] **Step 1: Confirm all required plan files exist**
+- [ ] **Step 1: Confirm the plans required to start Phase 0 exist**
 
 Run:
 
@@ -649,11 +657,6 @@ Run:
 Test-Path docs/superpowers/plans/2026-06-04-planning-governance-plan.md
 Test-Path docs/superpowers/plans/2026-05-29-phase-0-technical-foundation-plan.md
 Test-Path docs/superpowers/plans/2026-05-29-phase-1-identity-tenancy-entitlements-plan.md
-Test-Path docs/superpowers/plans/2026-05-29-phase-2-seller-commerce-pos-plan.md
-Test-Path docs/superpowers/plans/2026-05-29-phase-3-organizer-bazaar-hub-plan.md
-Test-Path docs/superpowers/plans/2026-05-29-phase-4-public-marketplace-plan.md
-Test-Path docs/superpowers/plans/2026-05-29-phase-5-promotions-growth-plan.md
-Test-Path docs/superpowers/plans/2026-05-29-production-readiness-plan.md
 ```
 
 Expected output:
@@ -662,14 +665,19 @@ Expected output:
 True
 True
 True
-True
-True
-True
-True
-True
 ```
 
-- [ ] **Step 2: Search for unsafe planning markers**
+- [ ] **Step 2: Confirm the governance pack exists**
+
+Run:
+
+```powershell
+Get-ChildItem docs/superpowers/governance -File | Measure-Object
+```
+
+Expected: at least ten governance files.
+
+- [ ] **Step 3: Search for unsafe planning markers**
 
 Run:
 
@@ -679,7 +687,7 @@ rg -n "T[B]D|T[O]DO|place[h]older|implement [l]ater|add [a]ppropriate|handle [e]
 
 Expected result: no matches.
 
-- [ ] **Step 3: Confirm git status**
+- [ ] **Step 4: Confirm git status**
 
 Run:
 
@@ -688,3 +696,5 @@ git status -sb
 ```
 
 Expected result: branch is clean after all planning commits are pushed.
+
+Detailed Phase 2, Phase 3, Phase 4, Phase 5, and production-readiness plans are created and reviewed before their respective phases begin. Their absence does not block Phase 0 or Phase 1 because the product design, traceability matrix, dependency map, and integration contracts already preserve their architectural needs.

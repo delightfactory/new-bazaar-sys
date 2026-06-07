@@ -236,6 +236,21 @@ The recommended architecture is:
 
 This means the system is deployed initially as one platform application, but it is internally divided into clear domains with strong boundaries. This avoids premature distributed-system complexity while preserving a professional path to future service extraction.
 
+### Approved Technology Baseline
+
+- Node.js 24 LTS.
+- TypeScript across the web app, Node runtime, shared packages, and Edge Functions.
+- React Router Framework Mode powered by Vite.
+- SSR/pre-rendering for public marketplace routes and application-style rendering for authenticated operations.
+- Supabase Postgres, Auth, Storage, Realtime, Queues, Cron, and Edge Functions.
+- SQL-first Supabase migrations and generated TypeScript database types; no ORM initially.
+- Node runtime for SSR/BFF and future durable workers.
+- IndexedDB with Dexie for offline POS state and sync queues.
+- Tailwind CSS, shadcn/ui composition patterns, and Lucide icons.
+- Vitest, Testing Library, Playwright, and database/RLS tests.
+
+Vite remains part of the approved stack through React Router Framework Mode. A plain client-only Vite SPA is not used for the entire platform because the public marketplace requires server-rendered or pre-rendered pages for SEO, link previews, and initial performance.
+
 Primary domains:
 
 - Identity & Tenancy
